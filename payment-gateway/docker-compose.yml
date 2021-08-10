@@ -1,0 +1,40 @@
+version: '3'
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: DockerfileDb
+    image: postgres:12
+    container_name: postgres
+    command: [ "postgres", "-c", "log_statement=all" ]
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  kafka:
+    image: johnnypark/kafka-zookeeper
+    container_name: kafka
+    environment:
+      - CONTAINER_ENV=dev
+      - ADVERTISED_HOST=kafka
+      - AUTO_CREATE_TOPICS=true
+
+#  listener:
+#    image: async-schenario-listener
+#    container_name: listener
+#    environment:
+#      - CONTAINER_ENV=dev
+#    ports:
+#      - "8081:8080"
+
+  payment-gateway:
+    build: .
+    image: payment-gateway
+    container_name: payment-gateway
+    environment:
+      - CONTAINER_ENV=dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    links:
+      - postgres

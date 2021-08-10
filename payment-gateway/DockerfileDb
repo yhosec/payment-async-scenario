@@ -1,0 +1,18 @@
+# Parent
+# ------------------------------------------------------------
+FROM postgres:12
+# FROM docker.doku.com/doku-pgsql-12-centos7
+
+#set timeZone indonesia
+#------------------------------------------------
+ENV TZ=Asia/Jakarta
+
+# Set environment for this images
+# ------------------------------------------------------------
+ENV POSTGRES_USER postgres
+ENV POSTGRES_PASSWORD password
+ENV POSTGRES_DB postgres
+
+# initdb
+# ------------------------------------------------------------
+COPY initdb/* /docker-entrypoint-initdb.d/
