@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+Actor "User" as user
+
+node "Angular Frontend" {
+    component "Send Payment Request" as request
+    component "Send Check Status" as status
+}
+
+node "Payment Gateway" {
+    component "Api Request" as apiRequest
+    component "Api Status" as apiStatus
+    component "Kafka producer 1" as producer1
+    component "Kafka listener 2" as listener2
+}
+
+
+node "Bank Interrface" {
+    component "Kafka listener 1" as listener1
+    component "Kafka producer 2" as producer2
+
+}
+
+database "PostgresSQL" as database
+
+user --> request
+request --> apiRequest
+status <--> apiStatus
+apiRequest --> producer1
+apiRequest --> database
+apiStatus <-- database
+producer1 --> listener1
+listener1 --> producer2
+producer2 --> listener2
+listener2 --> database
+@enduml
